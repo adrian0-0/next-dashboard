@@ -18,6 +18,7 @@
     "axios": "^1.6.5",
     "cors": "^2.8.5",
     "framer-motion": "^10.18.0",
+    "http-status": "^1.7.3",
     "next": "14.0.4",
     "next-connect": "^1.0.0",
     "prisma": "^5.8.1",
