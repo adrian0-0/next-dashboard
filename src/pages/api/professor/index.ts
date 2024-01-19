@@ -85,33 +85,6 @@ router.put(async (request, response) => {
   }
 });
 
-router.delete(async (request, response) => {
-  const { id } = request.params;
-
-  const intID = parseInt(id);
-
-  //SE ID NÃO EXISTIR RETORNE
-  if (!intID) {
-    return response.status(400).json("ID é mandatório");
-  }
-
-  const professorAlreadyExist = await prisma.professor.findUnique({
-    where: { id: intID },
-  });
-  //SE O MODEL TODO NÃO EXISTIR RETORNE
-  if (!professorAlreadyExist) {
-    return response.status(404).json("Tabela [Professor] não existe");
-  }
-
-  const delProfessorTab = await prisma.professor.delete({
-    where: {
-      id: intID,
-    },
-  });
-
-  return response.status(200).send(delProfessorTab);
-});
-
 export default router.handler({
   onError: (err = "Ops algo deu errado", req, res) => {
     console.error(err);
