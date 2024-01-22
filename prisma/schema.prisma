@@ -19,17 +19,19 @@ model Professor {
 model Company {
   id    Int     @id @default(autoincrement())
   nomeEmpresa String
-  coordenador String?
+  coordenadorTecnico String?
+  responsavelPorAcompanhar String?
   programa String?
   estagioPrograma String?
   cargoEmpresaProfessor RolexCompanyxProfessor[]
-  horasDosProgramas ProgramHours?
+  horasDosProgramas ProgramHours? @relation(fields: [programHoursId], references: [id], onDelete: Cascade)
+  programHoursId  Int? @unique
   @@map("empresas")
 }
 
 model ProgramHours {
-  company Company @relation(fields: [companyID], references: [id])
-  companyID Int @unique
+  id Int  @id @default(autoincrement())
+  company Company?
   horasPrevistasPan Int @default(0)
   horasRealizadasPan Int @default(0)
   horasPrevistasApr Int @default(0)
