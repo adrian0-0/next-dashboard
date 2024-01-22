@@ -8,26 +8,41 @@ const router = createRouter<NextApiRequest, NextApiResponse>();
 
 router.post(async (req, res) => {
   const {
-    nomeEmpresa,
-    coordenadorTecnico,
-    responsavelPorAcompanhar,
-    programa,
-    estagioPrograma,
+    empresaId,
+    horasPrevistasPan,
+    horasRealizadasPan,
+    horasPrevistasApr,
+    horasRealizadasApr,
+    horasPrevistasRE,
+    horasRealizadasRE,
+    horasPrevistasM1,
+    horasRealizadasM1,
+    horasPrevistasM2,
+    horasRealizadasM2,
+    horasPrevistasForum,
+    horasRealizadasForum,
   } = req.body;
 
   try {
-    // 1. Crie a Empresa
-    const postEmpresaTab = await prisma.company.create({
+    // 1. a Tabela de horas para a empresa
+    const postProgramHours = await prisma.programHours.create({
       data: {
-        nomeEmpresa: nomeEmpresa,
-        coordenadorTecnico: coordenadorTecnico,
-        responsavelPorAcompanhar: responsavelPorAcompanhar,
-        programa: programa,
-        estagioPrograma: estagioPrograma,
+        empresaId: empresaId,
+        horasPrevistasPan: horasPrevistasPan,
+        horasRealizadasPan: horasRealizadasPan,
+        horasPrevistasApr: horasPrevistasApr,
+        horasRealizadasApr: horasRealizadasApr,
+        horasPrevistasRE: horasPrevistasRE,
+        horasRealizadasRE: horasRealizadasRE,
+        horasPrevistasM1: horasPrevistasM1,
+        horasRealizadasM1: horasRealizadasM1,
+        horasPrevistasM2: horasPrevistasM2,
+        horasRealizadasM2: horasRealizadasM2,
+        horasPrevistasForum: horasPrevistasForum,
+        horasRealizadasForum: horasRealizadasForum,
       },
     });
-
-    return res.status(200).json(postEmpresaTab);
+    return res.status(200).json(postProgramHours);
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: "Falha no servidor" });
@@ -36,8 +51,8 @@ router.post(async (req, res) => {
 
 router.get(async (req, res) => {
   try {
-    const getEmpresaTab = await prisma.company.findMany();
-    return res.json(getEmpresaTab);
+    const getProgramHours = await prisma.company.findMany();
+    return res.json(getProgramHours);
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: "Ops, algo deu errado" });

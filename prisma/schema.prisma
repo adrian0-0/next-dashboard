@@ -25,12 +25,11 @@ model Company {
   estagioPrograma String?
   cargoEmpresaProfessor RolexCompanyxProfessor[]
   horasDosProgramas ProgramHours?
-
   @@map("empresas")
 }
 
 model ProgramHours {
-  empresa Company? @relation(fields: [empresaId], references: [id], onDelete: Cascade)
+  empresa Company @relation(fields: [empresaId], references: [id], onDelete: Cascade)
   empresaId Int @unique
   horasPrevistasPan Int @default(0)
   horasRealizadasPan Int @default(0)
@@ -48,8 +47,8 @@ model ProgramHours {
 
 model RolexCompanyxProfessor {
   @@id([professorId, empresaId, cargo])
-  professor Professor @relation(fields: [professorId], references: [id])
-  empresa Company @relation(fields: [empresaId], references: [id])
+  professor Professor @relation(fields: [professorId], references: [id], onDelete: Cascade)
+  empresa Company @relation(fields: [empresaId], references: [id] , onDelete: Cascade)
   cargo Role
   professorId Int
   empresaId Int
