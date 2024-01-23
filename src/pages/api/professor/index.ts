@@ -7,9 +7,7 @@ const prisma = new PrismaClient();
 const router = createRouter<NextApiRequest, NextApiResponse>();
 
 router.post(async (req, res) => {
-  console.log("post");
   const { nome, email, celular } = req.body;
-  console.log(req.body);
 
   try {
     // 1. Crie o Professor

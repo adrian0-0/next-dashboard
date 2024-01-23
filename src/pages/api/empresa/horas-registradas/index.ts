@@ -51,7 +51,7 @@ router.post(async (req, res) => {
 
 router.get(async (req, res) => {
   try {
-    const getProgramHours = await prisma.company.findMany();
+    const getProgramHours = await prisma.programHours.findMany();
     return res.json(getProgramHours);
   } catch (error) {
     console.error(error);
@@ -61,29 +61,43 @@ router.get(async (req, res) => {
 
 router.put(async (req, res) => {
   const {
-    id,
-    nomeEmpresa,
-    coordenadorTecnico,
-    responsavelPorAcompanhar,
-    programa,
-    estagioPrograma,
+    empresaId,
+    horasPrevistasPan,
+    horasRealizadasPan,
+    horasPrevistasApr,
+    horasRealizadasApr,
+    horasPrevistasRE,
+    horasRealizadasRE,
+    horasPrevistasM1,
+    horasRealizadasM1,
+    horasPrevistasM2,
+    horasRealizadasM2,
+    horasPrevistasForum,
+    horasRealizadasForum,
   } = req.body;
 
   try {
-    const putEmpresaTab = await prisma.company.update({
+    const putProgramHours = await prisma.programHours.update({
       where: {
-        id: id,
+        empresaId: empresaId,
       },
       data: {
-        nomeEmpresa: nomeEmpresa,
-        coordenadorTecnico: coordenadorTecnico,
-        responsavelPorAcompanhar: responsavelPorAcompanhar,
-        programa: programa,
-        estagioPrograma: estagioPrograma,
+        horasPrevistasPan,
+        horasRealizadasPan,
+        horasPrevistasApr,
+        horasRealizadasApr,
+        horasPrevistasRE,
+        horasRealizadasRE,
+        horasPrevistasM1,
+        horasRealizadasM1,
+        horasPrevistasM2,
+        horasRealizadasM2,
+        horasPrevistasForum,
+        horasRealizadasForum,
       },
     });
 
-    return res.status(201).json(putEmpresaTab);
+    return res.status(201).json(putProgramHours);
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: "Ops parece que algo deu errado" });
