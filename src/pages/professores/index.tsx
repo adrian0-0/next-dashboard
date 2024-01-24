@@ -10,6 +10,7 @@ import {
   TableContainer,
   Flex,
   Heading,
+  Button,
 } from "@chakra-ui/react";
 import React, { useState, useEffect } from "react";
 import AxiosPath from "@components/axiosApi";
@@ -50,16 +51,17 @@ function ProfessorTable() {
               <Th>Celular</Th>
             </Tr>
           </Thead>
-          <Tbody>
-            {professores.map((professor) => (
+
+          {professores.map((professor) => (
+            <Tbody>
               <Tr key={professor.id}>
                 <Td>{professor.id}</Td>
                 <Td>{professor.nome}</Td>
                 <Td>{professor.email}</Td>
                 <Td>{professor.celular}</Td>
               </Tr>
-            ))}
-          </Tbody>
+            </Tbody>
+          ))}
           <Tfoot>
             <Tr>
               <Th>ID</Th>
