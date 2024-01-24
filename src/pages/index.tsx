@@ -1,6 +1,5 @@
 import { useState } from "react";
 
-import ProfessorTable from "@components/professorTable";
 import {
   Box,
   Flex,
@@ -13,17 +12,25 @@ import {
   Td,
   TableCaption,
   TableContainer,
+  Heading,
+  Button,
+  Stack,
 } from "@chakra-ui/react";
+import router from "next/router";
 
 function App() {
   const [count, setCount] = useState(0);
 
   return (
     <Box>
-      <Box>
-        <ProfessorTable />
-      </Box>
-      <Flex justifyContent={"center"} alignItems={"center"}></Flex>
+      <Flex justifyContent={"center"} alignItems={"center"} h={"100vh"}>
+        <Stack spacing={"1rem"}>
+          <Heading>Olá 0-0</Heading>
+          <Button onClick={() => router.push("/professores")}>
+            Professores
+          </Button>
+        </Stack>
+      </Flex>
     </Box>
   );
 }

@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const AxiosPath = "http://localhost:8080";
+const AxiosPath = "http://localhost:8080/api";
 
 const api = axios.create({
   baseURL: AxiosPath,
