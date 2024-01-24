@@ -30,7 +30,7 @@ router.get(async (req, res) => {
 
 router.put(async (req, res) => {
   const { id } = req.query; // Obtendo a ID da URL
-  const { name, email, empresa } = req.body;
+  const { nome, email, celular } = req.body;
 
   try {
     const putProfessorTab = await prisma.professor.update({
@@ -38,24 +38,11 @@ router.put(async (req, res) => {
         id: Number(id),
       },
       data: {
-        name: name,
+        nome: nome,
         email: email,
+        celular: celular,
       },
     });
-
-    // 2. Se uma empresa for fornecido, associe o Professor a essa Empresa
-    if (empresa && empresa.length > 0) {
-      for (const empresaId of empresa) {
-        await prisma.empresa.update({
-          where: {
-            id: empresaId,
-          },
-          data: {
-            professorId: putProfessorTab.id,
-          },
-        });
-      }
-    }
 
     return res.status(201).json(putProfessorTab);
   } catch (error) {
@@ -83,16 +70,6 @@ router.delete(async (req, res) => {
         id: Number(id),
       },
     });
-
-    await prisma.empresa.updateMany({
-      where: {
-        professorId: Number(id),
-      },
-      data: {
-        professorId: null,
-      },
-    });
-
     return res
       .status(200)
       .json({ professorToDelete, message: "Professor excluído com sucesso" });

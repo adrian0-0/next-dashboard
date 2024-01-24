@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -12,21 +9,81 @@ datasource db {
 
 model Professor {
   id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String
-  empresa Empresa[]
-
+  nome  String
+  email String?  @unique
+  celular String?
+  cargoEmpresaProfessor RolexCompanyxProfessor[]
   @@map("professores")
 }
 
-model Empresa {
+model Company {
   id    Int     @id @default(autoincrement())
-  name  String
-  programa String
-  orientadorTecnico String 
-  monitor String
-  professor Professor? @relation(fields: [professorId], references: [id] )
-  professorId Int?
-
+  nomeEmpresa String
+  coordenadorTecnico String?
+  responsavelPorAcompanhar String?
+  programa String?
+  estagioPrograma String?
+  cargoEmpresaProfessor RolexCompanyxProfessor[]
+  horasDosProgramas ProgramHours?
   @@map("empresas")
 }
+
+model ProgramHours {
+  empresa Company @relation(fields: [empresaId], references: [id], onDelete: Cascade)
+  empresaId Int @unique
+  horasPrevistasPan Int @default(0)
+  horasRealizadasPan Int @default(0)
+  horasPrevistasApr Int @default(0)
+  horasRealizadasApr Int @default(0)
+  horasPrevistasRE Int @default(0)
+  horasRealizadasRE Int @default(0)
+  horasPrevistasM1 Int @default(0)
+  horasRealizadasM1 Int @default(0)
+  horasPrevistasM2 Int @default(0)
+  horasRealizadasM2 Int @default(0)
+  horasPrevistasForum Int @default(0)
+  horasRealizadasForum Int @default(0)
+}
+
+model RolexCompanyxProfessor {
+  @@id([professorId, empresaId, cargo])
+  professor Professor @relation(fields: [professorId], references: [id], onDelete: Cascade)
+  empresa Company @relation(fields: [empresaId], references: [id] , onDelete: Cascade)
+  cargo Role
+  professorId Int
+  empresaId Int
+}
+
+enum Role {
+  orientadorTecnico
+  monitor
+}
+
+
+// professor Professor? @relation(fields: [professorId], references: [id] )
+// professorId Int?
+
+
+//RELACIONAMENTO UM PARA UM
+
+// Para realizar um relacionamento  de um para um coloque as informações abaixo: 
+// model Professor{ 
+//   id  Int  @id @default(autoincrement())
+//   empresa Empresa?
+// }
+// model Empresa {
+//    professor Professor @relation(fields: [professorId], references: [id] )
+//    professorId Int @unique
+// }
+
+//RELACIONAMENTO UM PARA MUITOS
+
+// Para realizar um relacionamento  de um para um coloque as informações abaixo: 
+// model Professor{ 
+//   id  Int  @id @default(autoincrement())
+//   empresa Empresa[]
+// }
+// model Empresa {
+//    professor Professor @relation(fields: [professorId], references: [id] )
+//    professorId Int
+// }

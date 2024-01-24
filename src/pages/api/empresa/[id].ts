@@ -11,7 +11,7 @@ router.get(async (req, res) => {
   const { id } = req.query; // Obtendo a ID da URL
   try {
     // Use a ID para encontrar o Professor
-    const getEmpresa = await prisma.empresa.findUnique({
+    const getEmpresa = await prisma.company.findUnique({
       where: {
         id: Number(id),
       },
@@ -30,17 +30,24 @@ router.get(async (req, res) => {
 
 router.put(async (req, res) => {
   const { id } = req.query; // Obtendo a ID da URL
-  const { name, programa, orientadorTecnico, monitor, professorId } = req.body;
+  const {
+    nomeEmpresa,
+    coordenadorTecnico,
+    responsavelPorAcompanhar,
+    programa,
+    estagioPrograma,
+  } = req.body;
   try {
-    const putEmpresaTab = await prisma.empresa.update({
+    const putEmpresaTab = await prisma.company.update({
       where: {
         id: Number(id),
       },
       data: {
-        name: name,
+        nomeEmpresa: nomeEmpresa,
+        coordenadorTecnico: coordenadorTecnico,
+        responsavelPorAcompanhar: responsavelPorAcompanhar,
         programa: programa,
-        orientadorTecnico: orientadorTecnico,
-        monitor: monitor,
+        estagioPrograma: estagioPrograma,
       },
     });
 
@@ -55,7 +62,7 @@ router.delete(async (req, res) => {
   const { id } = req.query; // Obtendo a ID da URL
 
   try {
-    const empresaToDelete = await prisma.empresa.findUnique({
+    const empresaToDelete = await prisma.company.findUnique({
       where: {
         id: Number(id),
       },
@@ -65,18 +72,9 @@ router.delete(async (req, res) => {
       return res.status(404).json({ error: "Empresa não encontrado" });
     }
 
-    await prisma.empresa.delete({
+    await prisma.company.delete({
       where: {
         id: Number(id),
-      },
-    });
-
-    await prisma.empresa.updateMany({
-      where: {
-        professorId: Number(id),
-      },
-      data: {
-        professorId: null,
       },
     });
 

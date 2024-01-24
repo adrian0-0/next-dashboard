@@ -7,32 +7,17 @@ const prisma = new PrismaClient();
 const router = createRouter<NextApiRequest, NextApiResponse>();
 
 router.post(async (req, res) => {
-  console.log("post");
-  const { name, email, empresa } = req.body;
-  console.log(req.body);
+  const { nome, email, celular } = req.body;
 
   try {
     // 1. Crie o Professor
     const postProfessorTab = await prisma.professor.create({
       data: {
-        name: name,
+        nome: nome,
         email: email,
+        celular: celular,
       },
     });
-
-    // 2. Se uma empresa for fornecida, associe o Professor a essa Empresa
-    if (empresa && empresa.length > 0) {
-      for (const empresaId of empresa) {
-        await prisma.empresa.update({
-          where: {
-            id: empresaId,
-          },
-          data: {
-            professorId: postProfessorTab.id,
-          },
-        });
-      }
-    }
 
     return res.status(200).json(postProfessorTab);
   } catch (error) {
@@ -52,30 +37,18 @@ router.get(async (req, res) => {
 });
 
 router.put(async (request, response) => {
-  const { id, name, email, empresa } = request.body;
+  const { id, nome, email, celular } = request.body;
   try {
     const putProfessorTab = await prisma.professor.update({
       where: {
         id: id,
       },
       data: {
-        name: name,
+        nome: nome,
         email: email,
+        celular: celular,
       },
     });
-    // 2. Se uma empresa for fornecido, associe o Professor a essa Empresa
-    if (empresa && empresa.length > 0) {
-      for (const empresaId of empresa) {
-        await prisma.empresa.update({
-          where: {
-            id: empresaId,
-          },
-          data: {
-            professorId: putProfessorTab.id,
-          },
-        });
-      }
-    }
     return response.status(201).json(putProfessorTab);
   } catch (error) {
     console.error(error);

@@ -7,16 +7,23 @@ const prisma = new PrismaClient();
 const router = createRouter<NextApiRequest, NextApiResponse>();
 
 router.post(async (req, res) => {
-  const { name, programa, orientadorTecnico, monitor, professorId } = req.body;
+  const {
+    nomeEmpresa,
+    coordenadorTecnico,
+    responsavelPorAcompanhar,
+    programa,
+    estagioPrograma,
+  } = req.body;
 
   try {
     // 1. Crie a Empresa
-    const postEmpresaTab = await prisma.empresa.create({
+    const postEmpresaTab = await prisma.company.create({
       data: {
-        name: name,
+        nomeEmpresa: nomeEmpresa,
+        coordenadorTecnico: coordenadorTecnico,
+        responsavelPorAcompanhar: responsavelPorAcompanhar,
         programa: programa,
-        orientadorTecnico: orientadorTecnico,
-        monitor: monitor,
+        estagioPrograma: estagioPrograma,
       },
     });
 
@@ -29,7 +36,7 @@ router.post(async (req, res) => {
 
 router.get(async (req, res) => {
   try {
-    const getEmpresaTab = await prisma.empresa.findMany();
+    const getEmpresaTab = await prisma.company.findMany();
     return res.json(getEmpresaTab);
   } catch (error) {
     console.error(error);
@@ -37,28 +44,34 @@ router.get(async (req, res) => {
   }
 });
 
-router.put(async (request, response) => {
-  const { id, name, programa, orientadorTecnico, monitor, professorId } =
-    request.body;
+router.put(async (req, res) => {
+  const {
+    id,
+    nomeEmpresa,
+    coordenadorTecnico,
+    responsavelPorAcompanhar,
+    programa,
+    estagioPrograma,
+  } = req.body;
+
   try {
-    const putEmpresaTab = await prisma.empresa.update({
+    const putEmpresaTab = await prisma.company.update({
       where: {
         id: id,
       },
       data: {
-        name: name,
+        nomeEmpresa: nomeEmpresa,
+        coordenadorTecnico: coordenadorTecnico,
+        responsavelPorAcompanhar: responsavelPorAcompanhar,
         programa: programa,
-        orientadorTecnico: orientadorTecnico,
-        monitor: monitor,
+        estagioPrograma: estagioPrograma,
       },
     });
 
-    return response.status(201).json(putEmpresaTab);
+    return res.status(201).json(putEmpresaTab);
   } catch (error) {
     console.error(error);
-    return response
-      .status(500)
-      .json({ error: "Ops parece que algo deu errado" });
+    return res.status(500).json({ error: "Ops parece que algo deu errado" });
   }
 });
 
