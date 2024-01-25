@@ -9,7 +9,7 @@ const getData = async (setData: any, errGet: string, path: string) => {
   }
 };
 
-const postData = async (setProfessores: any) => {
+const postData = async (setData: any, errPost: string, path: string) => {
   try {
     console.log("tesete");
   } catch (err) {

@@ -26,9 +26,7 @@ function App() {
       <Flex justifyContent={"center"} alignItems={"center"} h={"100vh"}>
         <Stack spacing={"1rem"}>
           <Heading>Olá 0-0</Heading>
-          <Button onClick={() => router.push("/professores")}>
-            Professores
-          </Button>
+          <Button onClick={() => router.push("/professor")}>Professores</Button>
         </Stack>
       </Flex>
     </Box>

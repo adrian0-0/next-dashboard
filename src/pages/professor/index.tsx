@@ -11,6 +11,7 @@ import {
   Flex,
   Heading,
   Button,
+  Image,
 } from "@chakra-ui/react";
 import React, { useState, useEffect } from "react";
 import Api from "@components/axiosApi";
@@ -23,7 +24,7 @@ interface Professor {
   celular: string;
 }
 
-function ProfessorTable() {
+function Professor() {
   const [professores, setProfessores] = useState<Professor[]>([]);
   const professorPath = "/professor";
   const errMessage = {
@@ -32,6 +33,10 @@ function ProfessorTable() {
     put: "Erro: Ao editar algum dos campos do professor",
     delete: "Erro Ao deletar um professor",
   };
+
+  function handleButton() {
+    // postData();
+  }
 
   useEffect(() => {
     getData(setProfessores, errMessage.get, professorPath);
@@ -44,16 +49,33 @@ function ProfessorTable() {
         <Table variant="simple" mt={"2rem"}>
           <Thead>
             <Tr>
+              <Th></Th>
+              <Th></Th>
+              <Th></Th>
               <Th>ID</Th>
               <Th>Nome</Th>
               <Th>Email</Th>
               <Th>Celular</Th>
             </Tr>
           </Thead>
-
           {professores.map((professor) => (
             <Tbody>
               <Tr key={professor.id}>
+                <Td>
+                  <Button>+</Button>
+                </Td>
+                <Td>
+                  <Image
+                    src="/assets/svg/pencil.svg"
+                    alt="Editar campo de texto"
+                  />
+                </Td>
+                <Td>
+                  <Image
+                    src="/assets/svg/trashcan.svg"
+                    alt="Excluir campo de texto"
+                  />
+                </Td>
                 <Td>{professor.id}</Td>
                 <Td>{professor.nome}</Td>
                 <Td>{professor.email}</Td>
@@ -63,6 +85,9 @@ function ProfessorTable() {
           ))}
           <Tfoot>
             <Tr>
+              <Th></Th>
+              <Th></Th>
+              <Th></Th>
               <Th>ID</Th>
               <Th>Nome</Th>
               <Th>Email</Th>
@@ -76,4 +101,4 @@ function ProfessorTable() {
   );
 }
 
-export default ProfessorTable;
+export default Professor;
