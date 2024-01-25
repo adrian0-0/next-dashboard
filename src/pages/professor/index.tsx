@@ -13,8 +13,8 @@ import {
   Button,
 } from "@chakra-ui/react";
 import React, { useState, useEffect } from "react";
-import AxiosPath from "@components/axiosApi";
-import axios from "axios";
+import Api from "@components/axiosApi";
+import { getData, postData } from "@components/crud";
 
 interface Professor {
   id: number;
@@ -25,19 +25,18 @@ interface Professor {
 
 function ProfessorTable() {
   const [professores, setProfessores] = useState<Professor[]>([]);
-
-  const getProfessores = async () => {
-    try {
-      const res = await axios.get(AxiosPath + "/professor");
-      setProfessores(res.data);
-    } catch (err) {
-      console.error("Erro: Na coleta de dados dos professores", err);
-    }
+  const professorPath = "/professor";
+  const errMessage = {
+    get: "Erro: Na coleta de dados dos professores",
+    post: "Erro: Na postagem do professor",
+    put: "Erro: Ao editar algum dos campos do professor",
+    delete: "Erro Ao deletar um professor",
   };
 
   useEffect(() => {
-    getProfessores();
+    getData(setProfessores, errMessage.get, professorPath);
   }, []);
+
   return (
     <Flex justifyContent={"center"} alignItems={"center"} height={"100dvh"}>
       <TableContainer>
