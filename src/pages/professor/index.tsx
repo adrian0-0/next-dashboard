@@ -19,7 +19,7 @@ import {
   FormLabel,
 } from "@chakra-ui/react";
 import React, { useState, useEffect } from "react";
-import { getData, postData } from "@components/crud";
+import { getData, postData, editData } from "@components/crud";
 import router from "next/router";
 
 interface Professor {
@@ -31,10 +31,19 @@ interface Professor {
 
 function Professor() {
   const [professores, setProfessores] = useState<Professor[]>([]);
+  const [professorId, setProfessorId] = useState();
   const [crudBox, setCrudBox] = useState(false);
   const [crudHeadText, setCrudHeadText] = useState("");
+  const [crudType, setCrudType] = useState();
   const [submitVisibility, setSubmitVisibility] = useState(false);
+  const [professorName, setProfessorName] = useState("");
   const professorPath = "/professor";
+
+  const crudParam = {
+    post: 0,
+    edit: 1,
+    delete: 2,
+  };
   const crudBoxHeading = {
     delete: "Deletar Professor",
     edit: "Editar Professor",
@@ -46,10 +55,28 @@ function Professor() {
     delete: "Erro Ao deletar um professor",
   };
 
-  function handleButton(id: any, headingText: string) {
+  function handleButton(id: any, headingText: string, crudParam: any) {
     console.log(id);
-    setCrudBox(true);
+    setProfessorId(id);
     setCrudHeadText(headingText);
+    setCrudType(crudParam);
+    setCrudBox(true);
+  }
+
+  async function handleSubmit() {
+    console.log("handleSubmit1");
+
+    if (crudType === crudParam.edit) {
+      console.log("handleSubmit2");
+      const idPath = professorPath + "/" + professorId;
+      console.log(idPath);
+      console.log(professorName);
+      const updatedData = {
+        name: professorName,
+      };
+
+      await editData(updatedData, setProfessores, errMessage.put, idPath);
+    }
   }
 
   useEffect(() => {
@@ -58,7 +85,11 @@ function Professor() {
 
   return (
     <Box>
-      <Flex justifyContent={"center"} alignItems={"center"}>
+      <Flex
+        justifyContent={"center"}
+        alignItems={"center"}
+        mx={{ base: "1rem", md: "3rem", lg: "5rem" }}
+      >
         <TableContainer>
           <Heading textAlign={"center"}>Professores</Heading>
           <Table variant="simple" mt={"2rem"}>
@@ -74,8 +105,8 @@ function Professor() {
               </Tr>
             </Thead>
             {professores.map((professor) => (
-              <Tbody>
-                <Tr key={professor.id}>
+              <Tbody key={professor.id}>
+                <Tr>
                   <Td>
                     <Button>+</Button>
                   </Td>
@@ -84,7 +115,11 @@ function Professor() {
                       src="/assets/svg/pencil.svg"
                       alt="Editar campo de texto"
                       onClick={() =>
-                        handleButton(professor.id, crudBoxHeading.edit)
+                        handleButton(
+                          professor.id,
+                          crudBoxHeading.edit,
+                          crudParam.edit
+                        )
                       }
                     />
                   </Td>
@@ -117,20 +152,30 @@ function Professor() {
         </TableContainer>
       </Flex>
       <Box
-        display={crudBox ? "initial" : "none"}
-        justifyContent="center"
-        alignItems="center"
-        mt="2rem"
-        w="100%"
+        display={crudBox ? "block" : "none"}
+        mt="5rem"
         mx={{ base: "1rem", md: "3rem", lg: "5rem" }}
       >
-        <Stack spacing="1.5rem">
+        <Stack spacing="1.5rem" w={"40%"} alignItems={"center"} margin={"auto"}>
           <Heading>{crudHeadText}</Heading>
           <FormControl isRequired>
-            <FormLabel textAlign="left">First name</FormLabel>
-            <Input placeholder="First name" />
+            <FormLabel textAlign="left">Nome do Professor</FormLabel>
+            <Input
+              placeholder="Digite o nome do Professor"
+              onChange={(e) => {
+                setSubmitVisibility(true);
+                setProfessorName(e.target.value);
+              }}
+              value={professorName}
+            />
           </FormControl>
-          <Button display={submitVisibility ? "initial" : "none"} w="300px">
+          <Button
+            display={submitVisibility ? "block" : "none"}
+            w="300px"
+            onClick={() => {
+              handleSubmit();
+            }}
+          >
             Enviar
           </Button>
         </Stack>
