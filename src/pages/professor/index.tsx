@@ -37,6 +37,8 @@ function Professor() {
   const [crudType, setCrudType] = useState();
   const [submitVisibility, setSubmitVisibility] = useState(false);
   const [professorName, setProfessorName] = useState("");
+  const [professorEmail, setProfessorEmail] = useState("");
+  const [professorCelular, setProfessorCelular] = useState("");
   const professorPath = "/professor";
 
   const crudParam = {
@@ -51,12 +53,11 @@ function Professor() {
   const errMessage = {
     get: "Erro: Na coleta de dados dos professores",
     post: "Erro: Na postagem do professor",
-    put: "Erro: Ao editar algum dos campos do professor",
+    put: "Erro: Ao editar algum dos campos do professor, ATENÇÃO: O Email de um professor não pode ser igual a de outro professor",
     delete: "Erro Ao deletar um professor",
   };
 
   function handleButton(id: any, headingText: string, crudParam: any) {
-    console.log(id);
     setProfessorId(id);
     setCrudHeadText(headingText);
     setCrudType(crudParam);
@@ -64,18 +65,29 @@ function Professor() {
   }
 
   async function handleSubmit() {
-    console.log("handleSubmit1");
-
     if (crudType === crudParam.edit) {
-      console.log("handleSubmit2");
+      // PARA EDITAR OS DADOS VIA JSON USE O CODIGO ABAIXO E ENVIA O CAMINHO SEM A QUERY DA ID
+      // const professorPath = "/professor";
+      // const updatedData = {
+      //   id: professorId,
+      //   nome: professorName,
+      // };
+      // await editData(updatedData, errMessage.put, professorPath);
+      //------------------------------------------------------------------------------------------------
+      // CASO QUEIRA EDITAR OS DADOS VIA O ID DA QUERY USE O CODIGO ABAIXO E COLOQUE O CAMINHO COM A ID
+      // const idPath = professorPath + "/" + professorId;
+      // const updatedData = {
+      //   nome: professorName,
+      // };
+      // await editData(updatedData, errMessage.put, idPath);
       const idPath = professorPath + "/" + professorId;
-      console.log(idPath);
-      console.log(professorName);
       const updatedData = {
-        name: professorName,
+        nome: professorName,
+        email: professorEmail,
+        celular: professorCelular,
       };
-
-      await editData(updatedData, setProfessores, errMessage.put, idPath);
+      await editData(updatedData, errMessage.put, idPath);
+      await getData(setProfessores, errMessage.get, professorPath);
     }
   }
 
@@ -104,38 +116,40 @@ function Professor() {
                 <Th>Celular</Th>
               </Tr>
             </Thead>
-            {professores.map((professor) => (
-              <Tbody key={professor.id}>
-                <Tr>
-                  <Td>
-                    <Button>+</Button>
-                  </Td>
-                  <Td>
-                    <Image
-                      src="/assets/svg/pencil.svg"
-                      alt="Editar campo de texto"
-                      onClick={() =>
-                        handleButton(
-                          professor.id,
-                          crudBoxHeading.edit,
-                          crudParam.edit
-                        )
-                      }
-                    />
-                  </Td>
-                  <Td>
-                    <Image
-                      src="/assets/svg/trashcan.svg"
-                      alt="Excluir campo de texto"
-                    />
-                  </Td>
-                  <Td>{professor.id}</Td>
-                  <Td>{professor.nome}</Td>
-                  <Td>{professor.email}</Td>
-                  <Td>{professor.celular}</Td>
-                </Tr>
-              </Tbody>
-            ))}
+            {professores &&
+              Array.isArray(professores) &&
+              professores.map((professor) => (
+                <Tbody key={professor.id}>
+                  <Tr>
+                    <Td>
+                      <Button>+</Button>
+                    </Td>
+                    <Td>
+                      <Image
+                        src="/assets/svg/pencil.svg"
+                        alt="Editar campo de texto"
+                        onClick={() =>
+                          handleButton(
+                            professor.id,
+                            crudBoxHeading.edit,
+                            crudParam.edit
+                          )
+                        }
+                      />
+                    </Td>
+                    <Td>
+                      <Image
+                        src="/assets/svg/trashcan.svg"
+                        alt="Excluir campo de texto"
+                      />
+                    </Td>
+                    <Td>{professor.id}</Td>
+                    <Td>{professor.nome}</Td>
+                    <Td>{professor.email}</Td>
+                    <Td>{professor.celular}</Td>
+                  </Tr>
+                </Tbody>
+              ))}
             <Tfoot>
               <Tr>
                 <Th></Th>
@@ -167,6 +181,28 @@ function Professor() {
                 setProfessorName(e.target.value);
               }}
               value={professorName}
+            />
+          </FormControl>
+          <FormControl>
+            <FormLabel textAlign="left">Email: </FormLabel>
+            <Input
+              placeholder="Digite o email do Professor"
+              typeof="email"
+              onChange={(e) => {
+                setProfessorEmail(e.target.value);
+              }}
+              value={professorEmail}
+            />
+          </FormControl>
+          <FormControl>
+            <FormLabel textAlign="left">Celular: </FormLabel>
+            <Input
+              placeholder="Digite o email do Professor"
+              typeof="number"
+              onChange={(e) => {
+                setProfessorCelular(e.target.value);
+              }}
+              value={professorCelular}
             />
           </FormControl>
           <Button
