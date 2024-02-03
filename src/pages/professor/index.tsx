@@ -19,8 +19,9 @@ import {
   FormLabel,
 } from "@chakra-ui/react";
 import React, { useState, useEffect } from "react";
-import { getData, postData, editData } from "@components/crud";
+import { getData, postData, editData, deleteData } from "@components/crud";
 import router from "next/router";
+import { CLIENT_STATIC_FILES_RUNTIME_REACT_REFRESH } from "next/dist/shared/lib/constants";
 
 interface Professor {
   id: number;
@@ -47,8 +48,9 @@ function Professor() {
     delete: 2,
   };
   const crudBoxHeading = {
-    delete: "Deletar Professor",
+    post: "Adicionar Professor",
     edit: "Editar Professor",
+    delete: "Deletar Professor",
   };
   const errMessage = {
     get: "Erro: Na coleta de dados dos professores",
@@ -64,30 +66,65 @@ function Professor() {
     setCrudBox(true);
   }
 
+  async function handleDelete(id: any, crudParam: any) {
+    console.log("Chamando setProfessorId");
+    await setProfessorId(id);
+    console.log("setProfessorId concluído");
+
+    console.log("Chamando setCrudType");
+    await setCrudType(crudParam);
+    console.log("setCrudType concluído");
+    console.log(id);
+    console.log("Chamando handleSubmit");
+    await handleSubmit();
+    console.log("handleSubmit concluído");
+  }
+
   async function handleSubmit() {
+    console.log(crudType);
+    const idPath = professorPath + "/" + professorId;
+    const updatedData = {
+      nome: professorName,
+      email: professorEmail,
+      celular: professorCelular,
+    };
+    // PARA EDITAR OS DADOS VIA JSON USE O CODIGO ABAIXO E ENVIA O CAMINHO SEM A QUERY DA ID
+    // const professorPath = "/professor";
+    // const updatedData = {
+    //   id: professorId,
+    //   nome: professorName,
+    // };
+    // await editData(updatedData, errMessage.put, professorPath);
+    //------------------------------------------------------------------------------------------------
+    // CASO QUEIRA EDITAR OS DADOS VIA O ID DA QUERY USE O CODIGO ABAIXO E COLOQUE O CAMINHO COM A ID
+    // const idPath = professorPath + "/" + professorId;
+    // const updatedData = {
+    //   nome: professorName,
+    // };
+    // await editData(updatedData, errMessage.put, idPath);
+
+    if (crudType === crudParam.post) {
+      console.log("post");
+      await postData(updatedData, errMessage.post, professorPath);
+    }
     if (crudType === crudParam.edit) {
-      // PARA EDITAR OS DADOS VIA JSON USE O CODIGO ABAIXO E ENVIA O CAMINHO SEM A QUERY DA ID
-      // const professorPath = "/professor";
-      // const updatedData = {
-      //   id: professorId,
-      //   nome: professorName,
-      // };
-      // await editData(updatedData, errMessage.put, professorPath);
-      //------------------------------------------------------------------------------------------------
-      // CASO QUEIRA EDITAR OS DADOS VIA O ID DA QUERY USE O CODIGO ABAIXO E COLOQUE O CAMINHO COM A ID
-      // const idPath = professorPath + "/" + professorId;
-      // const updatedData = {
-      //   nome: professorName,
-      // };
-      // await editData(updatedData, errMessage.put, idPath);
-      const idPath = professorPath + "/" + professorId;
-      const updatedData = {
-        nome: professorName,
-        email: professorEmail,
-        celular: professorCelular,
-      };
+      console.log("edit");
       await editData(updatedData, errMessage.put, idPath);
-      await getData(setProfessores, errMessage.get, professorPath);
+    }
+    if (crudType === crudParam.delete) {
+      console.log("delete");
+      await deleteData(updatedData, errMessage.delete, idPath);
+      await cleanStates();
+    }
+    await getData(setProfessores, errMessage.get, professorPath);
+
+    async function cleanStates() {
+      setCrudBox(false);
+      setSubmitVisibility(false);
+      setCrudType(undefined);
+      setProfessorName("");
+      setProfessorEmail("");
+      setProfessorCelular("");
     }
   }
 
@@ -122,7 +159,17 @@ function Professor() {
                 <Tbody key={professor.id}>
                   <Tr>
                     <Td>
-                      <Button>+</Button>
+                      <Button
+                        onClick={() =>
+                          handleButton(
+                            professor.id,
+                            crudBoxHeading.post,
+                            crudParam.post
+                          )
+                        }
+                      >
+                        +
+                      </Button>
                     </Td>
                     <Td>
                       <Image
@@ -141,6 +188,9 @@ function Professor() {
                       <Image
                         src="/assets/svg/trashcan.svg"
                         alt="Excluir campo de texto"
+                        onClick={() =>
+                          handleDelete(professor.id, crudParam.delete)
+                        }
                       />
                     </Td>
                     <Td>{professor.id}</Td>
@@ -167,7 +217,7 @@ function Professor() {
       </Flex>
       <Box
         display={crudBox ? "block" : "none"}
-        mt="5rem"
+        my="5rem"
         mx={{ base: "1rem", md: "3rem", lg: "5rem" }}
       >
         <Stack spacing="1.5rem" w={"40%"} alignItems={"center"} margin={"auto"}>
@@ -207,6 +257,7 @@ function Professor() {
           </FormControl>
           <Button
             display={submitVisibility ? "block" : "none"}
+            typeof="submit"
             w="300px"
             onClick={() => {
               handleSubmit();
